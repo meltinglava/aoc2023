@@ -66,7 +66,7 @@ fn find_number(input: &str) -> usize {
 #[aoc(day1, part1)]
 fn part1(input: &[String]) -> usize {
     input
-        .into_iter()
+        .iter()
         .map(|n| first_number(n.chars()) * 10 + first_number(n.chars().rev()))
         .sum()
 }

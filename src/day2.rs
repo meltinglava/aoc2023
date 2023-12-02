@@ -1,4 +1,4 @@
-use std::{str::FromStr, collections::{HashMap, hash_map::{RandomState, OccupiedEntry, VacantEntry}}};
+use std::{str::FromStr, collections::{HashMap, hash_map::RandomState}};
 use aoc_runner_derive::{aoc, aoc_generator};
 
 #[derive(Debug, Clone)]
@@ -28,7 +28,7 @@ impl FromStr for Color {
 }
 
 fn single_color_draw_to_pair(single_color: &str) -> (Color, usize) {
-    let (count, color) = single_color.split_once(" ").unwrap();
+    let (count, color) = single_color.split_once(' ').unwrap();
     (color.parse().unwrap(), count.parse().unwrap())
 }
 
@@ -74,7 +74,7 @@ fn part2(input: &[Game]) -> usize {
         .iter_mut()
         .map(|n| {
             n.games.iter_mut().reduce(|acc, draw| {
-                for (color, count) in draw.into_iter() {
+                for (color, count) in draw.iter_mut() {
                     acc.entry(*color).and_modify(|n| *n = (*n).max(*count)).or_insert(*count);
                 }
                 acc
