@@ -17,7 +17,7 @@ struct Number {
 
 impl Number {
     fn new(value: usize, length: usize) -> Self {
-        Self{ value, length }
+        Self { value, length }
     }
 }
 
@@ -85,7 +85,10 @@ fn parse(input: &str) -> Scemantic {
                 value_length += 1;
             }
             if last_value && (ctype != CharType::Number || x == grid_x - 1) {
-                numbers.insert((start_possition, y).into(), Number::new(value, value_length));
+                numbers.insert(
+                    (start_possition, y).into(),
+                    Number::new(value, value_length),
+                );
                 value = 0;
                 value_length = 0;
                 last_value = false;
@@ -95,7 +98,12 @@ fn parse(input: &str) -> Scemantic {
             }
         }
     }
-    Scemantic { numbers, symbols, grid_x, grid_y }
+    Scemantic {
+        numbers,
+        symbols,
+        grid_x,
+        grid_y,
+    }
 }
 
 #[aoc(day3, part1)]
@@ -136,7 +144,12 @@ fn part2(scemantic: &Scemantic) -> usize {
         .sum()
 }
 
-fn insert_possible_gears(possible_gears: &mut HashMap<Position, Vec<usize>>, pos: &Position, number: &Number, scemantics: &Scemantic) {
+fn insert_possible_gears(
+    possible_gears: &mut HashMap<Position, Vec<usize>>,
+    pos: &Position,
+    number: &Number,
+    scemantics: &Scemantic,
+) {
     let x = scemantics.grid_x;
     let y = scemantics.grid_y;
 
@@ -152,9 +165,7 @@ fn insert_possible_gears(possible_gears: &mut HashMap<Position, Vec<usize>>, pos
             possible_gears.entry(pos).or_default().push(number.value);
         }
     }
-
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -174,7 +185,6 @@ mod tests {
         ...$.*....
         .664.598..
     "};
-
 
     #[test]
     fn part1_example() {

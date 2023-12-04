@@ -1,10 +1,13 @@
-use std::{str::FromStr, collections::{HashMap, hash_map::RandomState}};
 use aoc_runner_derive::{aoc, aoc_generator};
+use std::{
+    collections::{hash_map::RandomState, HashMap},
+    str::FromStr,
+};
 
 #[derive(Debug, Clone)]
 struct Game {
     id: usize,
-    games: Vec<HashMap<Color, usize>>
+    games: Vec<HashMap<Color, usize>>,
 }
 
 #[derive(Debug, Hash, PartialEq, Eq, Copy, Clone)]
@@ -37,31 +40,27 @@ fn line_to_game(line: &str) -> Game {
     let id: usize = game[5..].parse().unwrap();
     let games = draws
         .split("; ")
-        .map(|game| {
-            game
-                .split(", ")
-                .map(single_color_draw_to_pair)
-                .collect()
-        })
+        .map(|game| game.split(", ").map(single_color_draw_to_pair).collect())
         .collect();
     Game { id, games }
 }
 
 #[aoc_generator(day2)]
 fn parse(input: &str) -> Vec<Game> {
-    input
-        .lines()
-        .map(line_to_game)
-        .collect()
+    input.lines().map(line_to_game).collect()
 }
 
 #[aoc(day2, part1)]
 fn part1(input: &[Game]) -> usize {
-    let limits: HashMap<Color, usize, RandomState> = HashMap::from_iter([(Color::Red, 12), (Color::Green, 13), (Color::Blue, 14)]);
+    let limits: HashMap<Color, usize, RandomState> =
+        HashMap::from_iter([(Color::Red, 12), (Color::Green, 13), (Color::Blue, 14)]);
     input
         .iter()
         .filter(|n| {
-            !n.games.iter().flatten().any(|(color, count)| limits[color] < *count)
+            !n.games
+                .iter()
+                .flatten()
+                .any(|(color, count)| limits[color] < *count)
         })
         .map(|n| n.id)
         .sum()
@@ -75,7 +74,9 @@ fn part2(input: &[Game]) -> usize {
         .map(|n| {
             n.games.iter_mut().reduce(|acc, draw| {
                 for (color, count) in draw.iter_mut() {
-                    acc.entry(*color).and_modify(|n| *n = (*n).max(*count)).or_insert(*count);
+                    acc.entry(*color)
+                        .and_modify(|n| *n = (*n).max(*count))
+                        .or_insert(*count);
                 }
                 acc
             })
@@ -83,7 +84,6 @@ fn part2(input: &[Game]) -> usize {
         .map(|game| game.unwrap().values().product::<usize>())
         .sum()
 }
-
 
 #[cfg(test)]
 mod tests {

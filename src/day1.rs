@@ -58,8 +58,7 @@ fn find_number(input: &str) -> usize {
     {
         last.push(last_digit);
     }
-    first.into_iter().min_by_key(|(index, _)| *index).unwrap().1
-        * 10
+    first.into_iter().min_by_key(|(index, _)| *index).unwrap().1 * 10
         + last.into_iter().max_by_key(|(index, _)| *index).unwrap().1
 }
 
