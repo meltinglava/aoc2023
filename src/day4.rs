@@ -54,10 +54,10 @@ fn part2(cards: &[Scratchcard]) -> usize {
     let mut total_cards = vec![1; cards.len()];
     for card in cards {
         let winnings = card.winning.intersection(&card.yours).count();
-        let total_cards = total_cards[card.number];
+        let count_of_current_card = total_cards[card.number];
         for i in 0..winnings {
             if let Some(card_number) = total_cards.get_mut(card.number + i + 1) {
-                *card_number += total_cards;
+                *card_number += count_of_current_card;
             }
         }
     }
