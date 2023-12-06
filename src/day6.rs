@@ -24,6 +24,7 @@ fn parse_line_numbers(input: &str) -> Vec<usize> {
 fn parse_line_bad_kerning(input: &str) -> usize {
     input[9..].trim().replace(' ', "").parse().unwrap()
 }
+
 fn winning_times(race: &Race) -> usize {
     // use the qadratic equation to solve this
     // a = -1
