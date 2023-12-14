@@ -198,7 +198,6 @@ impl Grid {
             current = current.cycle();
             cycle += 1;
         }
-        dbg!(&lookup, found);
         let offset = (cycles - found) % (cycle - found) + found;
         lookup.get(&offset).unwrap().total_load()
     }
