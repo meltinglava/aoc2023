@@ -1,4 +1,4 @@
-#![feature(pattern, slice_group_by, assert_matches)]
+#![feature(pattern, assert_matches)]
 
 mod day1;
 mod day10;
@@ -8,6 +8,7 @@ mod day13;
 mod day14;
 mod day15;
 mod day16;
+mod day17;
 mod day2;
 mod day3;
 mod day4;
