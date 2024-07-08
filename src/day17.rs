@@ -1,4 +1,4 @@
-use std::{cmp::Reverse, collections::{BinaryHeap, HashSet}, fmt::{Debug, Display}, ops::{Index, IndexMut, Not}};
+use std::{cmp::Reverse, collections::{BinaryHeap, HashSet}, fmt::{Debug, Display}, ops::{Index, IndexMut, Not, RangeBounds}};
 use itertools::Itertools;
 
 use aoc_runner_derive::{aoc, aoc_generator};
@@ -82,7 +82,7 @@ impl Not for Direction {
 use Direction::*;
 
 fn coords_iterator(n: usize) -> impl Iterator<Item=Coord> {
-    (0..n).into_iter().flat_map(move |i| (0..n).map(move |j| (j, i)))
+    (0..n).flat_map(move |i| (0..n).map(move |j| (j, i)))
 }
 
 fn parse_grid<const N: usize>(input: &str) -> Grid<N> {
@@ -100,12 +100,22 @@ fn parse_grid<const N: usize>(input: &str) -> Grid<N> {
     grid
 }
 
-fn possible_moves_by_direction(coord: Coord, direction: Direction, steps_in_direction: usize, limit: usize) -> impl Iterator<Item=(Coord, Direction)> {
+fn possible_moves_by_heat_loss(coord: Coord, direction: Direction, steps_in_direction: usize, limit: usize) -> Vec<(Coord, Direction)> {
     [North, South, East, West]
         .into_iter()
         .filter(move |d| *d != !direction)
         .filter(move |d| *d != direction || steps_in_direction < 3)
         .filter_map(move |d| Some((d.step(coord, limit)?, d)))
+        .collect()
+}
+
+fn possible_moves_by_ultra_cruciblescrucibles(coord: Coord, direction: Direction, steps_in_direction: usize, limit: usize) -> Vec<(Coord, Direction)> {
+    [North, South, East, West]
+        .into_iter()
+        .filter(move |d| *d != !direction)
+        .filter(move |d| (*d == direction && steps_in_direction < 10) || (*d != direction && (4..=10).contains(&steps_in_direction)))
+        .filter_map(move |d| Some((d.step(coord, limit)?, d)))
+        .collect()
 }
 
 impl QueueOrder {
@@ -120,19 +130,22 @@ impl QueueOrder {
 
 }
 
-fn find_shortest_path<const N: usize>(grid: &Grid<N>) -> usize {
+fn find_shortest_path<const N: usize, F: Fn(Coord, Direction, usize, usize) -> Vec<(Coord, Direction)>, R: RangeBounds<usize>>(grid: &Grid<N>, moves: F, steps_bounds: R) -> usize {
     let mut seen = HashSet::<(Coord, Direction, usize)>::new();
     let mut queue = BinaryHeap::new();
     queue.push(Reverse(QueueOrder::new(0, (0, 0), South, 0)));
+    queue.push(Reverse(QueueOrder::new(0, (0, 0), East, 0)));
     while let Some(tgt) = queue.pop() {
         let tgt = tgt.0;
-        if tgt.pos == grid.end() {
+        assert!(tgt.num_steps < 11);
+        if tgt.pos == grid.end() && steps_bounds.contains(&tgt.num_steps) {
             return tgt.cost;
         }
         if !seen.insert((tgt.pos, tgt.direction, tgt.num_steps)) {
             continue;
         }
-        for (new_pos, new_direction) in possible_moves_by_direction(tgt.pos, tgt.direction, tgt.num_steps, N) {
+        let m = moves(tgt.pos, tgt.direction, tgt.num_steps, N);
+        for (new_pos, new_direction) in m {
             queue.push(Reverse(QueueOrder::new(tgt.cost + grid[new_pos], new_pos, new_direction, if tgt.direction == new_direction {tgt.num_steps + 1} else {1})));
         }
     }
@@ -146,7 +159,12 @@ fn parse(input: &str) -> Grid<141> {
 
 #[aoc(day17, part1)]
 fn part1<const N: usize>(grid: &Grid<N>) -> usize {
-    find_shortest_path(grid)
+    find_shortest_path(grid, possible_moves_by_heat_loss, 1..=3)
+}
+
+#[aoc(day17, part2)]
+fn part2<const N: usize>(grid: &Grid<N>) -> usize {
+    find_shortest_path(grid, possible_moves_by_ultra_cruciblescrucibles, 4..=10)
 }
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy)]
@@ -205,8 +223,8 @@ mod tests {
     }
 
 
-    // #[test]
-    // fn part2_example() {
-    //     assert_eq!(part2(&parse_grid::<13>(INPUT)), 51);
-    // }
+    #[test]
+    fn part2_example() {
+        assert_eq!(part2(&parse_grid::<13>(INPUT)), 94);
+    }
 }
