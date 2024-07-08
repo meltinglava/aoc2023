@@ -78,7 +78,7 @@ fn parse(input: &str) -> Scemantic {
             if ctype == CharType::Number {
                 if !last_value {
                     last_value = true;
-                    start_possition = x
+                    start_possition = x;
                 }
                 value *= 10;
                 value += c.to_digit(10).unwrap() as usize;
@@ -134,7 +134,7 @@ fn check_near_symbol(pos: &Position, number: &Number, scemantics: &Scemantic) ->
 #[aoc(day3, part2)]
 fn part2(scemantic: &Scemantic) -> usize {
     let mut possible_gears: HashMap<Position, Vec<usize>> = HashMap::new();
-    for (pos, number) in scemantic.numbers.iter() {
+    for (pos, number) in &scemantic.numbers {
         insert_possible_gears(&mut possible_gears, pos, number, scemantic);
     }
     possible_gears

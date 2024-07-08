@@ -62,9 +62,9 @@ fn count(
     map: &mut HashMap<(Vec<Field>, Vec<usize>), usize>,
 ) -> usize {
     if cfg.is_empty() {
-        return nums.is_empty() as usize;
+        return usize::from(nums.is_empty());
     } else if nums.is_empty() {
-        return !cfg.contains(&Damaged) as usize;
+        return usize::from(!cfg.contains(&Damaged));
     }
     let key = (cfg.to_vec(), nums.to_vec());
     if let Some(value) = map.get(&key) {
@@ -77,9 +77,9 @@ fn count(
     }
     if cfg[0] != Operational && nums[0] <= cfg.len() && !cfg[..nums[0]].contains(&Operational) {
         if nums[0] == cfg.len() {
-            result += count(&[], &nums[1..], map)
+            result += count(&[], &nums[1..], map);
         } else if cfg[nums[0]] != Damaged {
-            result += count(&cfg[(nums[0] + 1)..], &nums[1..], map)
+            result += count(&cfg[(nums[0] + 1)..], &nums[1..], map);
         }
     }
     map.insert(key, result);

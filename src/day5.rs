@@ -118,13 +118,12 @@ impl Mapping {
         self.mappings
             .iter()
             .find(|map| (map.source_range.start..(map.source_range.end)).contains(&source))
-            .map(|map| source - map.source_range.start + map.dest_range.start)
-            .unwrap_or(source)
+            .map_or(source, |map| source - map.source_range.start + map.dest_range.start)
     }
 
     fn map_source_range_to_dest_ranges(&self, mut range: Range<usize>) -> Vec<Range<usize>> {
         let mut ranges = Vec::new();
-        for map in self.mappings.iter() {
+        for map in &self.mappings {
             if range.end < map.source_range.start {
                 // remaning range ends before current range and as this is the
                 // lowest source range avaliblle we add the remaing range to

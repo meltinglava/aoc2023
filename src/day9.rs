@@ -23,7 +23,7 @@ fn find_next_number(numbers: &[i64]) -> i64 {
             .windows(2)
             .map(|n| n[1] - n[0])
             .collect_vec();
-        numbers.push(next)
+        numbers.push(next);
     }
     let mut last = 0;
     for line in numbers.iter_mut().rev() {
@@ -43,7 +43,7 @@ fn find_former_number(numbers: &[i64]) -> i64 {
             .windows(2)
             .map(|n| n[1] - n[0])
             .collect_vec();
-        numbers.push(next)
+        numbers.push(next);
     }
     let mut former_first = 0;
     for line in numbers.iter_mut().rev() {

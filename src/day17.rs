@@ -95,7 +95,7 @@ fn parse_grid<const N: usize>(input: &str) -> Grid<N> {
         .map(|c| c.to_digit(10).unwrap() as usize)
         .zip(coords_iterator(N))
     {
-        grid[coord] = number
+        grid[coord] = number;
     }
     grid
 }

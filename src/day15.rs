@@ -28,16 +28,16 @@ fn part2(input: &[String]) -> usize {
         if i.contains('-') {
             let key = &i[..i.len() - 1];
             let hash = hash_string(key) as usize;
-            map.get_mut(hash).unwrap().retain(|n| n.0 != key)
+            map.get_mut(hash).unwrap().retain(|n| n.0 != key);
         } else if i.contains('=') {
             let (key, value) = i.split_once('=').unwrap();
             let value: usize = value.parse().unwrap();
             let hash = hash_string(key) as usize;
             let bucket = map.get_mut(hash).unwrap();
             if let Some(entry) = bucket.iter_mut().find(|n| n.0 == key) {
-                entry.1 = value
+                entry.1 = value;
             } else {
-                bucket.push((key, value))
+                bucket.push((key, value));
             }
         } else {
             unreachable!("Unknown instruction: {i}")

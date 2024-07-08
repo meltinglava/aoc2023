@@ -30,7 +30,7 @@ fn parse_distance(input: &str, distance: usize) -> Vec<(usize, usize)> {
         .for_each(|(pos, _)| {
             seen.iter_mut()
                 .filter(|(x, _)| *x >= pos)
-                .for_each(|(x, _)| *x += distance - 1)
+                .for_each(|(x, _)| *x += distance - 1);
         });
     seen
 }

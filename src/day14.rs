@@ -31,8 +31,7 @@ impl Display for Grid {
                         self.grid
                             .get(&(x, y))
                             .copied()
-                            .map(char::from)
-                            .unwrap_or('.')
+                            .map_or('.', char::from)
                     })
                     .collect::<String>()
             })
@@ -102,10 +101,9 @@ impl Direction {
 
     fn with_direction_start(&self, grid: &Grid) -> usize {
         match self {
-            North => 0,
+            North | West => 0,
             South => grid.size.1 - 1,
             East => grid.size.0 - 1,
-            West => 0,
         }
     }
 
@@ -230,7 +228,7 @@ fn part1(grid: &Grid) -> usize {
 
 #[aoc(day14, part2)]
 fn part2(grid: &Grid) -> usize {
-    grid.total_load_shake(1000000000)
+    grid.total_load_shake(1_000_000_000)
 }
 
 #[cfg(test)]

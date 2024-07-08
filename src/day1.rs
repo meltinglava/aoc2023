@@ -72,7 +72,7 @@ fn part1(input: &[String]) -> usize {
 
 #[aoc(day1, part2)]
 fn part2(input: &[String]) -> usize {
-    input.iter().map(|n| n.as_str()).map(find_number).sum()
+    input.iter().map(String::as_str).map(find_number).sum()
 }
 
 #[cfg(test)]

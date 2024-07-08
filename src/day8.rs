@@ -41,7 +41,7 @@ impl<'a> Map<'a> {
             .iter()
             .cycle()
             .position(|&movement| {
-                if last_key.map(|c: &str| c.ends_with(end)).unwrap_or(false) {
+                if last_key.is_some_and(|c: &str| c.ends_with(end)) {
                     true
                 } else {
                     let key = current_spot[movement];
@@ -56,7 +56,7 @@ impl<'a> Map<'a> {
     fn ghost_walk(&self, start: &str, end: &str) -> usize {
         self.spots
             .keys()
-            .cloned()
+            .copied()
             .filter(|c| c.ends_with(start))
             .map(|s| self.walk(s, end))
             .reduce(num::integer::lcm)

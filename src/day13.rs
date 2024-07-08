@@ -26,7 +26,7 @@ impl Grid {
     fn invert(&self) -> Self {
         let mut inverted = vec![Vec::with_capacity(self.grid.len()); self.grid[0].len()];
         for i in 0..self.grid[0].len() {
-            for grid_line in self.grid.iter() {
+            for grid_line in &self.grid {
                 inverted[i].push(grid_line[i]);
             }
         }
@@ -43,11 +43,10 @@ impl Grid {
             centers.retain(|center| {
                 line_number
                     .checked_sub((line_number - center) * 2 + 1)
-                    .map(|i| self.grid[i] == *grid_line)
-                    .unwrap_or(true)
+                    .map_or(true, |i| self.grid[i] == *grid_line)
             });
             if line_number != 0 && self.grid[line_number - 1] == *grid_line {
-                centers.push(line_number)
+                centers.push(line_number);
             }
         }
         centers.sort_by_key(|n| (self.grid.len() / 2).abs_diff(*n));
@@ -106,7 +105,7 @@ fn differences_in_material(a: &[Material], b: &[Material]) -> usize {
     a.iter()
         .copied()
         .zip(b.iter().copied())
-        .map(|(a, b)| (a != b) as usize)
+        .map(|(a, b)| usize::from(a != b))
         .sum()
 }
 
