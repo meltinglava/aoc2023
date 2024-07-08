@@ -98,6 +98,7 @@ enum Direction {
 }
 
 impl Direction {
+    #[allow(dead_code)]
     fn step(&self, coord: Coord) -> Option<Coord> {
         Some(match self {
             North => (coord.0, coord.1.checked_sub(1)?),
